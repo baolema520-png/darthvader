@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleExecutable</key>
+    <string>VirtualFaceCamDALPlugin</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.virtualfacecam.dal.plugin</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>VirtualFaceCamDALPlugin</string>
+    <key>CFBundlePackageType</key>
+    <string>BNDL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.2.0</string>
+    <key>CFBundleVersion</key>
+    <string>2</string>
+    <key>CFPlugInDynamicRegistration</key>
+    <false/>
+    <key>CFPlugInFactories</key>
+    <dict>
+        <key>4A8C0F95-1909-4E68-9B2C-3C353E3A1C33</key>
+        <string>VirtualFaceCamDALPluginFactory</string>
+    </dict>
+    <key>CFPlugInTypes</key>
+    <dict>
+        <key>B97D2026-8C1A-11D8-8D87-000A95AF56EA</key>
+        <array>
+            <string>4A8C0F95-1909-4E68-9B2C-3C353E3A1C33</string>
+        </array>
+    </dict>
+</dict>
+</plist>

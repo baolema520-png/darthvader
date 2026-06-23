@@ -1,0 +1,25 @@
+.DS_Store
+.build/
+.swiftpm/
+.venv-ai/
+build/
+build-artifacts/
+
+# Local app bundle (use the DMG for distribution)
+APP FINAL/520CAM.app/
+
+# Xcode user data
+*.xcuserstate
+xcuserdata/
+DerivedData/
+
+# Archives and notarization artifacts
+*.xcarchive
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+
+# Temp DMG builds
+*.temp.dmg

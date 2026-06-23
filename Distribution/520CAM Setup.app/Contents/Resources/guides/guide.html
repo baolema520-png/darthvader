@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>520CAM — Installation</title>
+  <style>
+    :root { color-scheme: light dark; --bg: #0f1419; --card: #1a2332; --text: #e8eef7; --muted: #9aa8bc; --accent: #3b82f6; --accent-hover: #2563eb; --ok: #22c55e; --border: #2a3648; }
+    @media (prefers-color-scheme: light) { :root { --bg: #f4f7fb; --card: #ffffff; --text: #0f172a; --muted: #64748b; --border: #dbe3ef; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 32px 20px 48px; }
+    header { text-align: center; margin-bottom: 28px; }
+    h1 { margin: 0 0 8px; font-size: 1.75rem; font-weight: 700; }
+    .subtitle { color: var(--muted); margin: 0; }
+    .progress { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 22px; }
+    .progress-bar { height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; margin-top: 10px; }
+    .progress-bar > span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), #60a5fa); border-radius: 999px; transition: width 0.25s ease; }
+    .step { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+    .step.done { border-color: color-mix(in srgb, var(--ok) 45%, var(--border)); }
+    .step-head { display: flex; gap: 12px; align-items: flex-start; }
+    .step-check { margin-top: 2px; width: 20px; height: 20px; accent-color: var(--accent); flex-shrink: 0; }
+    .step-title { font-weight: 650; font-size: 1.05rem; margin: 0 0 6px; }
+    .step p { margin: 0 0 12px; color: var(--muted); font-size: 0.95rem; }
+    .drag-hint { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 10%, transparent); border: 1px dashed color-mix(in srgb, var(--accent) 35%, var(--border)); margin-bottom: 12px; font-size: 0.92rem; }
+    .arrow { font-size: 1.4rem; opacity: 0.85; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    a.btn { display: inline-block; text-decoration: none; color: #fff; background: var(--accent); padding: 8px 14px; border-radius: 9px; font-size: 0.9rem; font-weight: 600; }
+    a.btn:hover { background: var(--accent-hover); }
+    a.btn.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    footer { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>520CAM</h1>
+      <p class="subtitle">Follow these steps in order. Check each one when you complete it.</p>
+    </header>
+    <div class="progress"><strong id="progress-label">0 of 5 steps completed</strong><div class="progress-bar"><span id="progress-fill"></span></div></div>
+    <article class="step"><div class="step-head"><input class="step-check" type="checkbox" id="s1"><div><h2 class="step-title">1. Install the app</h2><div class="drag-hint"><span>Drag <strong>520CAM</strong></span><span class="arrow">→</span><span>to <strong>Applications</strong></span></div><p>The virtual camera only works when the app is installed in <code>/Applications</code>, not from the disk image or Downloads.</p><div class="actions"><a class="btn secondary" href="file:///Applications/">Open Applications</a></div></div></div></article>
+    <article class="step"><div class="step-head"><input class="step-check" type="checkbox" id="s2"><div><h2 class="step-title">2. Open 520CAM</h2><p>Open the app from Applications. If macOS warns about an identified developer, click <strong>Open</strong>.</p><div class="actions"><a class="btn" href="file:///Applications/520CAM.app/">Open 520CAM</a></div></div></div></article>
+    <article class="step"><div class="step-head"><input class="step-check" type="checkbox" id="s3"><div><h2 class="step-title">3. Allow camera access</h2><p>In the app, click <strong>Start</strong>. If macOS asks for permission, choose <strong>Allow</strong>. If you denied it before, enable it in Settings.</p><div class="actions"><a class="btn" href="x-apple.systempreferences:com.apple.preference.security?Privacy_Camera">Open Camera privacy</a></div></div></div></article>
+    <article class="step"><div class="step-head"><input class="step-check" type="checkbox" id="s4"><div><h2 class="step-title">4. Enable the virtual camera</h2><p>Click <strong>Virtual Cam</strong> in the app. If macOS asks to approve the camera extension, go to Privacy &amp; Security and allow it.</p><div class="actions"><a class="btn" href="x-apple.systempreferences:com.apple.settings.PrivacySecurity">Open Privacy &amp; Security</a></div></div></div></article>
+    <article class="step"><div class="step-head"><input class="step-check" type="checkbox" id="s5"><div><h2 class="step-title">5. Select 520CAM in Zoom, Meet, or OBS</h2><p>In your video app, choose <strong>520CAM</strong> as the camera. If it does not appear, quit and reopen that app.</p></div></div></article>
+    <footer>You can reopen this guide from the app using <em>Setup help</em>.</footer>
+  </div>
+  <script>
+    const storageKey = "520cam-setup-progress-en";
+    const checks = [...document.querySelectorAll(".step-check")];
+    const steps = [...document.querySelectorAll(".step")];
+    const label = document.getElementById("progress-label");
+    const fill = document.getElementById("progress-fill");
+    function render() { const done = checks.filter((b) => b.checked).length; label.textContent = `${done} of ${checks.length} steps completed`; fill.style.width = `${(done / checks.length) * 100}%`; steps.forEach((s, i) => s.classList.toggle("done", checks[i].checked)); }
+    function load() { try { const saved = JSON.parse(localStorage.getItem(storageKey) || "[]"); checks.forEach((b, i) => { b.checked = Boolean(saved[i]); }); } catch (_) {} render(); }
+    function save() { localStorage.setItem(storageKey, JSON.stringify(checks.map((b) => b.checked))); render(); }
+    checks.forEach((b) => b.addEventListener("change", save)); load();
+  </script>
+</body>
+</html>

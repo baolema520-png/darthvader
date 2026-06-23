@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    <key>com.apple.security.device.camera</key>
+    <true/>
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>group.com.virtualfacecam.shared</string>
+    </array>
+    <key>com.apple.security.temporary-exception.files.absolute-path.read-write</key>
+    <array>
+        <string>/Users/Shared</string>
+        <string>/Users/Shared/VirtualFaceCam</string>
+        <string>/var/tmp</string>
+        <string>/private/var/tmp</string>
+        <string>/tmp</string>
+        <string>/private/tmp</string>
+    </array>
+</dict>
+</plist>
