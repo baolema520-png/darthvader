@@ -53,6 +53,32 @@ final class ProfessionalFacePipeline {
     }
 
     func process(sampleBuffer: CMSampleBuffer) -> FaceLandmarks? {
+        processAll(sampleBuffer: sampleBuffer, maxFaces: 1).first
+    }
+
+    func processAll(sampleBuffer: CMSampleBuffer, maxFaces: Int) -> [FaceLandmarks] {
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return [] }
+        guard let extracted = try? visionExtractor.extractUpTo(
+            maxFaces: maxFaces,
+            from: pixelBuffer,
+            sequenceRequestHandler: sequenceRequestHandler
+        ), !extracted.isEmpty else {
+            return []
+        }
+
+        return extracted.map { face in
+            let fitted = denseReplica.refine(face)
+            let embedding = identityReplica.embedding(from: fitted)
+            let metadata = identityReplica.metadata(from: embedding)
+            stateQueue.sync {
+                latestIdentityEmbedding = embedding
+                latestIdentityMetadata = metadata
+            }
+            return fitted
+        }
+    }
+
+    private func processLegacy(sampleBuffer: CMSampleBuffer) -> FaceLandmarks? {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return nil }
         guard let extracted = try? visionExtractor.extract(
             from: pixelBuffer,

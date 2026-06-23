@@ -69,6 +69,7 @@
 		D3F316B56F1EFA9D199EA524 /* FaceTrackingProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216E886CE6E6DDE15B2F6FDA /* FaceTrackingProviding.swift */; };
 		DB6E4AFAC5EEF2FE1C8775F8 /* FaceLandmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE77176BC81EB684423C539A /* FaceLandmarks.swift */; };
 		DBF739726475CE83E461C3B2 /* CoreMediaIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE3A5A2AA943BAB2F4D9A06 /* CoreMediaIO.framework */; };
+		E047115D864BFF0C210E2391 /* MultiFaceTemporalFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B530727C13D8F4B90F547C /* MultiFaceTemporalFilter.swift */; };
 		E0E9B4699AFDD62DF7537207 /* version-RFB-640.onnx in Resources */ = {isa = PBXBuildFile; fileRef = 8EB5930B23402BE266B38EEE /* version-RFB-640.onnx */; };
 		E228F557E8918E3FC3FDD3C0 /* face_landmarker.task in Resources */ = {isa = PBXBuildFile; fileRef = 763B8772EA5319AD5918A57A /* face_landmarker.task */; };
 		E3634A22C39FE9E79617BF77 /* AvatarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88AA7C7C64454B5B0D407EE /* AvatarModel.swift */; };
@@ -158,6 +159,7 @@
 		36A580895425659E770DD049 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		38275D4FFA2908322484FB7E /* FaceTemporalFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTemporalFilter.swift; sourceTree = "<group>"; };
 		3E24CD99686EB37E3FAD7917 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		47B530727C13D8F4B90F547C /* MultiFaceTemporalFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiFaceTemporalFilter.swift; sourceTree = "<group>"; };
 		49C62C6A34021E23BB87F6E0 /* VirtualFaceCamAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualFaceCamAppTests.swift; sourceTree = "<group>"; };
 		508DC97EA77D7A94D0658B51 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		53BE98B54869623A51DE4ED4 /* VirtualCameraExtensionStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualCameraExtensionStream.swift; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 				38275D4FFA2908322484FB7E /* FaceTemporalFilter.swift */,
 				8C712A62AA681C940B01BFD4 /* FaceTrackingService.swift */,
 				63A193260AD0D6B61D471539 /* MediaPipeBlendshapeMapper.swift */,
+				47B530727C13D8F4B90F547C /* MultiFaceTemporalFilter.swift */,
 				E271EE9EAFDE4D750B5A05F9 /* VisionFaceLandmarkExtractor.swift */,
 			);
 			path = Tracking;
@@ -793,6 +796,7 @@
 				2C3D3C2B3AEBC6EF8E475CDA /* MediaPipeBlendshapeMapper.swift in Sources */,
 				17818AAD34D2870E86F99626 /* MeshGenerator.swift in Sources */,
 				504361CBD4BB57D6EBF2C5ED /* MetalAvatarRenderer.swift in Sources */,
+				E047115D864BFF0C210E2391 /* MultiFaceTemporalFilter.swift in Sources */,
 				D04E83068FEE9778FA4888ED /* PreviewView.swift in Sources */,
 				81BF2C40548DC7773C82C059 /* ProceduralIdentityTextureGenerator.swift in Sources */,
 				40786605B51A2CB7B6D396EE /* ProfessionalFacePipeline.swift in Sources */,

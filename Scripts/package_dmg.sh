@@ -33,7 +33,7 @@ chmod +x "${PROJECT_DIR}/Scripts/build_dmg_setup_app.sh"
 rm -rf "${STAGING_DIR}" "${DMG_PATH}" "${DMG_TEMP}"
 while IFS= read -r vol; do
   hdiutil detach "${vol}" >/dev/null 2>&1 || true
-done < <(mount | awk '/\/Volumes\/520CAM/{print $3}')
+done < <(mount | sed -n 's/.* on \(.*\) (.*$/\1/p' | grep '^/Volumes/520CAM')
 
 mkdir -p "${STAGING_DIR}"
 ditto "${APP_PATH}" "${STAGING_DIR}/${APP_BUNDLE_NAME}"
@@ -69,6 +69,7 @@ if command -v SetFile >/dev/null 2>&1; then
 fi
 
 echo "==> Configuring Finder window"
+BG_TIFF="${MOUNT_POINT}/.background/dmg-background.tiff"
 /usr/bin/osascript <<EOF
 tell application "Finder"
   activate
@@ -84,7 +85,8 @@ tell application "Finder"
     set arrangement of opts to not arranged
     set icon size of opts to 88
     set text size of opts to 12
-    set background picture of opts to file ".background:dmg-background.tiff"
+    set bgFile to POSIX file "${BG_TIFF}" as alias
+    set background picture of opts to bgFile
     set position of item "${SETUP_APP_NAME}" of win to {68, 248}
     set position of item "${APP_BUNDLE_NAME}" of win to {248, 248}
     set position of item "Applications" of win to {428, 248}

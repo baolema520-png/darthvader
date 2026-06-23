@@ -44,7 +44,7 @@ final class RenderingEngine: RenderingProviding {
         backgroundImageURL: URL?,
         avatarModel: AvatarModel?,
         animatedMesh: AvatarMesh?,
-        landmarks: FaceLandmarks?
+        landmarks: [FaceLandmarks]
     ) -> CVPixelBuffer? {
         let sourceImage = CIImage(cvPixelBuffer: sourceFrame)
         let extent = sourceImage.extent
@@ -737,10 +737,10 @@ private extension RenderingEngine {
         )?.outputImage?.cropped(to: extent) ?? CIImage(color: .black).cropped(to: extent)
     }
 
-    func applyBlur(to source: CIImage, landmarks: FaceLandmarks?, extent: CGRect, radius: CGFloat) -> CIImage {
-        guard let landmarks else { return source }
+    func applyBlur(to source: CIImage, landmarks: [FaceLandmarks], extent: CGRect, radius: CGFloat) -> CIImage {
+        guard !landmarks.isEmpty else { return source }
         let blurred = source.applyingFilter("CIGaussianBlur", parameters: ["inputRadius": radius])
-        let mask = softFaceMask(for: landmarks.boundingBox, extent: extent)
+        let mask = combinedFaceMask(for: landmarks, extent: extent)
         return blurred.applyingFilter(
             "CIBlendWithMask",
             parameters: [
@@ -750,10 +750,10 @@ private extension RenderingEngine {
         )
     }
 
-    func applyPixelate(to source: CIImage, landmarks: FaceLandmarks?, extent: CGRect, scale: CGFloat) -> CIImage {
-        guard let landmarks else { return source }
+    func applyPixelate(to source: CIImage, landmarks: [FaceLandmarks], extent: CGRect, scale: CGFloat) -> CIImage {
+        guard !landmarks.isEmpty else { return source }
         let pixelated = source.applyingFilter("CIPixellate", parameters: ["inputScale": scale])
-        let mask = softFaceMask(for: landmarks.boundingBox, extent: extent)
+        let mask = combinedFaceMask(for: landmarks, extent: extent)
         return pixelated.applyingFilter(
             "CIBlendWithMask",
             parameters: [
@@ -761,6 +761,15 @@ private extension RenderingEngine {
                 kCIInputMaskImageKey: mask
             ]
         )
+    }
+
+    func combinedFaceMask(for landmarks: [FaceLandmarks], extent: CGRect) -> CIImage {
+        let masks = landmarks.map { softFaceMask(for: $0.boundingBox, extent: extent) }
+        return masks.dropFirst().reduce(masks[0]) { partial, next in
+            next.applyingFilter("CIMaximumCompositing", parameters: [
+                kCIInputBackgroundImageKey: partial
+            ])
+        }
     }
 
     func softFaceMask(for normalizedFaceBBox: CGRect, extent: CGRect) -> CIImage {

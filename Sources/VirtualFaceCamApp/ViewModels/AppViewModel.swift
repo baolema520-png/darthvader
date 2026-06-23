@@ -34,7 +34,7 @@ final class AppViewModel: ObservableObject {
     private let stateQueue = DispatchQueue(label: "AppViewModel.StateQueue", qos: .userInitiated)
     private let frameProcessingSemaphore = DispatchSemaphore(value: 1)
     private let previewContext = CIContext()
-    private var latestLandmarks: FaceLandmarks?
+    private var latestLandmarks: [FaceLandmarks] = []
     private var frameCounter: Int = 0
     private let dalStatusService = DALPluginStatusService()
     private let dalAutoInstaller = DALAutoInstaller()
@@ -337,26 +337,16 @@ final class AppViewModel: ObservableObject {
                 self.latestLandmarks = landmarks
             }
             DispatchQueue.main.async {
-                self.isTrackingActive = (landmarks != nil)
-                if let landmarks {
-                    let topBlendshape = landmarks.blendshapeCoefficients.max { lhs, rhs in
-                        lhs.value < rhs.value
-                    }
-                    self.debugTrackingText = String(
-                        format: "jaw %.2f mouth %.2f blinkL %.2f blinkR %.2f gaze(%.2f, %.2f) conf %.2f bs:%@ %.2f",
-                        landmarks.jawOpen,
-                        landmarks.mouthOpen,
-                        landmarks.leftEyeBlink,
-                        landmarks.rightEyeBlink,
-                        landmarks.gazeX,
-                        landmarks.gazeY,
-                        landmarks.expressionConfidence,
-                        (topBlendshape?.key ?? "-") as NSString,
-                        topBlendshape?.value ?? 0
-                    )
-                } else {
-                    self.debugTrackingText = "sin landmarks"
+                self.isTrackingActive = !landmarks.isEmpty
+                if landmarks.isEmpty {
+                    self.debugTrackingText = "no faces"
+                    return
                 }
+
+                let summary = landmarks.enumerated().map { index, face in
+                    String(format: "face%d conf %.2f", index + 1, face.expressionConfidence)
+                }.joined(separator: " | ")
+                self.debugTrackingText = "\(landmarks.count) faces: \(summary)"
             }
         }
     }

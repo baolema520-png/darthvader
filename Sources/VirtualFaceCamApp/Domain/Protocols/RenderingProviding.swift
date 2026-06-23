@@ -14,6 +14,6 @@ protocol RenderingProviding: AnyObject {
         backgroundImageURL: URL?,
         avatarModel: AvatarModel?,
         animatedMesh: AvatarMesh?,
-        landmarks: FaceLandmarks?
+        landmarks: [FaceLandmarks]
     ) -> CVPixelBuffer?
 }

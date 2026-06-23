@@ -4,11 +4,11 @@ import Foundation
 import Vision
 
 final class FaceTrackingService: FaceTrackingProviding {
-    var onLandmarks: ((FaceLandmarks?) -> Void)?
+    var onLandmarks: (([FaceLandmarks]) -> Void)?
 
     private let queue = DispatchQueue(label: "FaceTrackingService.Queue", qos: .userInitiated)
     private let sequenceRequestHandler = VNSequenceRequestHandler()
-    private let temporalFilter = FaceTemporalFilter(alpha: 0.80)
+    private let temporalFilter = MultiFaceTemporalFilter(alpha: 0.80)
     private let professionalPipeline: ProfessionalFacePipeline?
     private let visionExtractor = VisionFaceLandmarkExtractor()
     private var isProcessingFrame = false
@@ -19,7 +19,7 @@ final class FaceTrackingService: FaceTrackingProviding {
 
     func process(sampleBuffer: CMSampleBuffer) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            onLandmarks?(nil)
+            onLandmarks?([])
             return
         }
 
@@ -29,23 +29,28 @@ final class FaceTrackingService: FaceTrackingProviding {
             self.isProcessingFrame = true
             defer { self.isProcessingFrame = false }
 
-            if let professionalLandmarks = self.professionalPipeline?.process(sampleBuffer: sampleBuffer) {
-                self.onLandmarks?(self.temporalFilter.filter(professionalLandmarks))
+            if let professionalFaces = self.professionalPipeline?.processAll(
+                sampleBuffer: sampleBuffer,
+                maxFaces: MultiFaceTemporalFilter.maxTrackedFaces
+            ), !professionalFaces.isEmpty {
+                self.onLandmarks?(self.temporalFilter.filter(professionalFaces))
                 return
             }
 
             do {
-                guard let mapped = try self.visionExtractor.extract(
+                let detected = try self.visionExtractor.extractUpTo(
+                    maxFaces: MultiFaceTemporalFilter.maxTrackedFaces,
                     from: pixelBuffer,
                     sequenceRequestHandler: self.sequenceRequestHandler
-                ) else {
-                    self.onLandmarks?(nil)
+                )
+                guard !detected.isEmpty else {
+                    self.onLandmarks?([])
                     self.temporalFilter.reset()
                     return
                 }
-                self.onLandmarks?(self.temporalFilter.filter(mapped))
+                self.onLandmarks?(self.temporalFilter.filter(detected))
             } catch {
-                self.onLandmarks?(nil)
+                self.onLandmarks?([])
                 self.temporalFilter.reset()
             }
         }

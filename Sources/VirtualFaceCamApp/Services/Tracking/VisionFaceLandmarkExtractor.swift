@@ -8,10 +8,32 @@ struct VisionFaceLandmarkExtractor {
         from pixelBuffer: CVPixelBuffer,
         sequenceRequestHandler: VNSequenceRequestHandler
     ) throws -> FaceLandmarks? {
+        try extractUpTo(
+            maxFaces: 1,
+            from: pixelBuffer,
+            sequenceRequestHandler: sequenceRequestHandler
+        ).first
+    }
+
+    func extractUpTo(
+        maxFaces: Int,
+        from pixelBuffer: CVPixelBuffer,
+        sequenceRequestHandler: VNSequenceRequestHandler
+    ) throws -> [FaceLandmarks] {
         let request = VNDetectFaceLandmarksRequest()
         try sequenceRequestHandler.perform([request], on: pixelBuffer)
-        guard let observation = request.results?.first else { return nil }
+        let observations = (request.results ?? [])
+            .sorted { lhs, rhs in
+                let lhsArea = lhs.boundingBox.width * lhs.boundingBox.height
+                let rhsArea = rhs.boundingBox.width * rhs.boundingBox.height
+                return lhsArea > rhsArea
+            }
+            .prefix(max(1, maxFaces))
 
+        return observations.map(mapObservation)
+    }
+
+    private func mapObservation(_ observation: VNFaceObservation) -> FaceLandmarks {
         let metrics = Self.extractMetrics(from: observation)
         let contourPoints = Self.globalPoints(from: observation.landmarks?.faceContour, in: observation.boundingBox)
         let mouthOuterPoints = Self.globalPoints(from: observation.landmarks?.outerLips, in: observation.boundingBox)
